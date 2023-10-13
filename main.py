@@ -1,35 +1,37 @@
-import time
-import csv
-header = ["Name", "Password", "Points"]
-player_data = []
+# Get player names and passwords
+player1 = input("Enter player 1 name: ")
+password1 = input("Enter player 1 password: ")
+player2 = input("Enter player 2 name: ")
+password2 = input("Enter player 2 password: ")
 
-fwrite = open('./db.csv', 'w')
+if password1 != "password1" or password2 != "password2":
+    print("Incorrect password. Exiting game.")
+    quit()
 
+# Play game
+scores = {player1: 0, player2: 0}
+for round in range(1, 6):
+    print(f"Round {round}:")
+    for player in [player1, player2]:
+        input(f"{player}, press Enter to roll the dice.")
+        score = roll_dice() + roll_dice()
+        scores[player] += score
+        print(f"{player} scored {score} points. Total score: {scores[player]}")
 
-print("Welcome to the roll the dice game!")
-time.sleep(1)
-print("You will be asked to roll a dice, if you get an even number you gain 10 points")
-time.sleep(0.2)
-print("If you get an odd number you lose 5 points")
-
-
-p1acc = input("Player one, Do you have an account? (y/n)")
-
-
-if p1acc == "y":
-    p1name = input("What is your name?")
-    p1pass = input("What is your password?")
+# Determine winner
+if scores[player1] > scores[player2]:
+    winner = player1
+elif scores[player2] > scores[player1]:
+    winner = player2
 else:
-    p1name = input("What is your name?")
-    p1pass = input("What is your password?")
-    print("Welcome " + p1name)
-    player_data.append(p1name)
-    player_data.append(p1pass)
-round = 0
+    # Tiebreaker
+    input("Tiebreaker! Press Enter to roll one die each.")
+    scores[player1] += roll_dice()
+    scores[player2] += roll_dice()
+    if scores[player1] > scores[player2]:
+        winner = player1
+    else:
+        winner = player2
 
-csvwriter = csv.writer(fwrite)
-csvwriter.writerow(header)
-csvwriter.writerow(player_data)
-
-
-fwrite.close()
+# Print winner and scores
+print(f"{winner} wins with a score of {scores[winner]}!")
